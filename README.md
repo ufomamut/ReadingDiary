@@ -3,7 +3,7 @@
 A web application for managing books, ratings, and personal reading diaries.  
 This project was created primarily as a **learning and portfolio project** focused on building a full-featured web application using **ASP.NET Core MVC**.
 
-[🇨🇿 verze níže](#česky)
+[🇨🇿 verze dole](#česky)
 
 ---
 
