@@ -1,0 +1,100 @@
+﻿@model ReadingDiary.Web.Models.ViewModels.MyBooksIndexViewModel
+
+@{
+    ViewData["Title"] = "Moje knihy";
+    ViewData["PageTitle"] = "Moje knihy";
+    ViewData["PageDescription"] = "Přehled knih, které máš rozečtené, odložené nebo dočtené.";
+
+
+    // Reading groups (status, items, bootstrap color)
+    var groups = new[]
+    {
+        ("Ke čtení", Model.ToRead, "secondary"),
+        ("Čtu", Model.Reading, "primary"),
+        ("Odloženo", Model.Postponed, "warning"),
+        ("Dočteno", Model.Finished, "success")
+    };
+}
+
+<!-- HEADER -->
+@await Html.PartialAsync("_PageHeaderPartial")
+
+<!-- EMPTY STATE -->
+@if (!Model.ToRead.Any()
+    && !Model.Reading.Any()
+    && !Model.Postponed.Any()
+    && !Model.Finished.Any())
+{
+    <div class="alert alert-light border">
+        <strong>Zatím tu nic není.</strong><br />
+        Jakmile si k nějaké knize vytvoříš deník, objeví se tady.
+    </div>
+}
+
+<!-- BOOK GROUP SECTIONS -->
+@foreach (var group in groups)
+{
+    if (group.Item2.Any())
+    {
+        <section class="mb-5">
+
+            <h3 class="mb-3">
+                @group.Item1
+                <span class="badge bg-@group.Item3 ms-2">
+                    @group.Item2.Count
+                </span>
+            </h3>
+
+            <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+
+                @foreach (var book in group.Item2)
+                {
+                    <div class="col">
+
+                        <a asp-controller="Books"
+                           asp-action="Details"
+                           asp-route-id="@book.BookId"
+                           class="text-decoration-none text-dark">
+
+                            <!-- CARD -->
+                            <div class="card book-card h-100">
+
+                                <div style="height: 260px; background: #fff; border-bottom: 1px solid #f0f0f0;">
+                                    @if (!string.IsNullOrEmpty(book.CoverImagePath))
+                                    {
+                                        <img src="/BookCovers/@book.CoverImagePath"
+                                             class="card-img-top"
+                                             style="height: 100%; width: 100%; object-fit: contain; padding: 10px;"
+                                             alt="@book.Title" />
+                                    }
+                                    else
+                                    {
+                                        <div style="height: 100%; background:#f7f7f7; border:1px dashed #ccc;"></div>
+                                    }
+                                </div>
+
+                                <div class="card-body">
+                                    <h5 class="card-title mb-1">
+                                        @book.Title
+                                    </h5>
+                                    <p class="card-text text-muted mb-2">
+                                        @book.Author
+                                    </p>
+                                </div>
+
+                                <div class="card-footer bg-white border-0">
+                                    <small class="text-muted">
+                                        Naposledy upraveno: @book.UpdatedAtFormatted
+                                    </small>
+                                </div>
+
+                            </div>
+                        </a>
+
+                    </div>
+                }
+
+            </div>
+        </section>
+    }
+}

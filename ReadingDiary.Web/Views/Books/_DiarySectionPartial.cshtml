@@ -1,0 +1,142 @@
+﻿@using ReadingDiary.Domain.Enums
+@using ReadingDiary.Web.Extensions
+@model ReadingDiary.Web.Models.ViewModels.BookDetailViewModel
+
+<section class="mt-5">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-0">Můj čtenářský deník</h3>
+
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <div class="d-flex gap-2">
+
+                @if (Model.HasDiary)
+                {
+                    <a class="btn btn-sm btn-outline-primary"
+                       asp-controller="Diary"
+                       asp-action="Edit"
+                       asp-route-bookId="@Model.Id">
+                        Upravit deník
+                    </a>
+
+                    <button class="btn btn-sm btn-outline-danger"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteConfirmModal"
+                            data-delete-modal
+                            data-controller="Diary"
+                            data-action="Delete"
+                            data-id="@Model.DiaryId"
+                            data-book-id="@Model.Id"
+                            data-text="Opravdu chcete smazat tento čtenářský deník?">
+                        Smazat
+                    </button>
+                }
+                else
+                {
+                    <a class="btn btn-sm btn-outline-success"
+                       asp-controller="Diary"
+                       asp-action="Edit"
+                       asp-route-bookId="@Model.Id">
+                        Přidat deník
+                    </a>
+                }
+
+            </div>
+        }
+    </div>
+
+
+    <!-- CONTENT -->
+    @if (User.Identity?.IsAuthenticated != true)
+    {
+        <div class="alert alert-light border">
+            Pro vedení čtenářského deníku se prosím přihlas.
+        </div>
+    }
+    else if (!Model.HasDiary)
+    {
+        <div class="alert alert-light border">
+            Zatím nemáš k této knize žádný deník.
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body">
+
+                <!-- STATUS BADGE -->
+                <div class="mb-2">
+                    <span class="badge bg-secondary">
+                        @Model.DiaryStatus?.ToCzech()
+                    </span>
+
+                    <span class="text-muted small ms-2">
+                        naposledy upraveno: @Model.DiaryUpdatedAtFormatted
+                    </span>
+
+                </div>
+
+                <!-- WYSIWYG -->
+                <div class="mt-3">
+                    @Html.Raw(Model.DiaryNotes)
+                </div>
+
+                <!-- CHANGE STATUS BUTTONS-->
+                @{
+                    var currentStatus = Model.DiaryStatus;
+                }
+
+                <form asp-controller="Diary"
+                      asp-action="ChangeStatus"
+                      method="post"
+                      class="mt-4 d-flex gap-2 flex-wrap">
+
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden" name="diaryId" value="@Model.DiaryId" />
+                    <input type="hidden" name="bookId" value="@Model.Id" />
+
+                    <button type="submit"
+                            name="status"
+                            value="ToRead"
+                            class="btn btn-sm @(currentStatus == ReadingDiaryState.ToRead
+                                                                                       ? "btn-primary"
+                                                                                       : "btn-outline-primary")">
+                            Ke čtení
+                    </button>
+
+
+                    <button type="submit"
+                            name="status"
+                            value="Reading"
+                            class="btn btn-sm @(currentStatus == ReadingDiaryState.Reading
+                                                                                    ? "btn-primary"
+                                                                                    : "btn-outline-primary")">
+                            Čtu
+                    </button>
+
+                    <button type="submit"
+                            name="status"
+                            value="Finished"
+                            class="btn btn-sm @(currentStatus == ReadingDiaryState.Finished
+                                                                                ? "btn-success"
+                                                                                : "btn-outline-success")">
+                            Dočteno
+                    </button>
+
+                    <button type="submit"
+                            name="status"
+                            value="Postponed"
+                            class="btn btn-sm @(currentStatus == ReadingDiaryState.Postponed
+                                                                                ? "btn-secondary"
+                                                                                : "btn-outline-secondary")">
+                            Odloženo
+                    </button>
+                </form>
+            </div>
+        </div>
+    }
+
+</section>

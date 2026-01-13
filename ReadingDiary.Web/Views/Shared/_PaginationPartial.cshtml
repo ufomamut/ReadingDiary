@@ -1,0 +1,50 @@
+﻿@{
+    int maxPagesToShow = 5;
+
+    int startPage = Math.Max(1, Model.CurrentPage - 2);
+    int endPage = Math.Min(Model.TotalPages, startPage + maxPagesToShow - 1);
+
+    if (endPage - startPage + 1 < maxPagesToShow)
+    {
+        startPage = Math.Max(1, endPage - maxPagesToShow + 1);
+    }
+}
+
+@if (Model.TotalPages > 1)
+{
+    <ul class="pagination justify-content-center mt-4">
+
+        <!-- PREVIOUS -->
+        <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+            <a class="page-link"
+               asp-route-page="@(Model.CurrentPage - 1)"
+               asp-route-search="@Model.Search"
+               asp-route-sort="@Model.Sort">
+                &laquo;
+            </a>
+        </li>
+
+        @for (int i = startPage; i <= endPage; i++)
+        {
+            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                <a class="page-link"
+                   asp-route-page="@i"
+                   asp-route-search="@Model.Search"
+                   asp-route-sort="@Model.Sort">
+                    @i
+                </a>
+            </li>
+        }
+
+        <!-- NEXT -->
+        <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+            <a class="page-link"
+               asp-route-page="@(Model.CurrentPage + 1)"
+               asp-route-search="@Model.Search"
+               asp-route-sort="@Model.Sort">
+                &raquo;
+            </a>
+        </li>
+
+    </ul>
+}

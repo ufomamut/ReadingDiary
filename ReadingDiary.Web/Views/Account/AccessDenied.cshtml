@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewData["Title"] = "Přístup odepřen !!";
+    ViewData["PageTitle"] = "Přístup odepřen";
+    ViewData["PageDescription"] = "Na tuto akci nemáte dostatečná oprávnění.";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6 col-lg-4">
+
+        <!-- PAGE HEADER -->
+        @await Html.PartialAsync("_PageHeaderPartial")
+
+        <!-- CARD -->
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+
+                <p class="mb-4">
+                    Pokud tomu tak není, kontaktujte Amina
+                </p>
+
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="btn btn-primary w-100">
+                    Zpět na katalog knih
+                </a>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+

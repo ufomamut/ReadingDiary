@@ -1,0 +1,39 @@
+﻿
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <form method="post" id="deleteConfirmForm">
+                @Html.AntiForgeryToken()
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Potvrzení smazání</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p id="deleteConfirmText">
+                        Opravdu chcete tuto položku smazat?
+                    </p>
+
+                    <!-- Target entity ID (set dynamically via JS) -->
+                    <input type="hidden" name="id" id="deleteItemId" />
+
+                    <!-- Optional context parameter (e.g. bookId for redirect) -->
+                    <input type="hidden" name="bookId" id="deleteBookId" />
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Zrušit
+                    </button>
+                    <button type="submit" class="btn btn-danger">
+                        Smazat
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+

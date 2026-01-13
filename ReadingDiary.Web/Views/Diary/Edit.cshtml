@@ -1,0 +1,70 @@
+﻿@using ReadingDiary.Domain.Enums
+@using ReadingDiary.Web.Extensions
+@using Microsoft.AspNetCore.Mvc.Rendering
+@model ReadingDiary.Web.Models.ViewModels.DiaryViewModel
+
+@{
+    ViewData["Title"] = "Úprava deníku";
+    ViewData["PageTitle"] = "Váš deník";
+    ViewData["PageDescription"] = "Zde si můžete pokračovat ve svém deníku";
+
+    // Prepare SelectList with czech display names for diary status enum
+    var statusOptions = Enum
+                            .GetValues<ReadingDiaryState>()
+                            .Select(s => new SelectListItem
+                            {
+                                Value = s.ToString(),
+                                Text = s.ToCzech()
+                            });
+}
+
+<!-- HEADER -->
+@await Html.PartialAsync("_PageHeaderPartial")
+
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+
+    <!-- Required for create/update -->
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="BookId" />
+
+    <div class="mb-3">
+        <label asp-for="Status" class="form-label"></label>
+        <select asp-for="Status" class="form-select" asp-items="statusOptions"> </select>
+    </div>
+
+    <!-- WYSIWYG EDITOR -->
+    <div class="mb-3">
+        <label asp-for="DiaryNotes" class="form-label"></label>
+        <textarea asp-for="DiaryNotes"
+                  id="diary-editor"
+                  class="form-control"
+                  rows="12">
+        </textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary p-lg-2">
+        Uložit
+    </button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <!-- TinyMCE CDN -->
+    <script src="https://cdn.tiny.cloud/1/@ViewBag.TinyMceApiKey/tinymce/8/tinymce.min.js"
+            referrerpolicy="origin"></script>
+
+    <script>
+        tinymce.init({
+            selector: '#diary-editor',
+            height: 350,
+            menubar: false,
+            plugins: ['lists', 'link', 'code', 'table'],
+            toolbar:
+                'undo redo | bold italic underline | ' +
+                'bullist numlist | link table | code',
+            branding: false
+        });
+    </script>
+}

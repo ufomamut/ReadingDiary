@@ -1,0 +1,76 @@
+﻿@model IEnumerable<ReadingDiary.Web.Models.ViewModels.GenreViewModel>
+
+
+@{
+    ViewData["Title"] = "Správa žánrů";
+    ViewData["PageTitle"] = "Správa žánrů";
+    ViewData["PageDescription"] = "Přehled a správa knižních žánrů.";
+}
+
+<!-- HEADER -->
+@await Html.PartialAsync("_PageHeaderPartial")
+
+<section>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="text-muted">
+            Celkem žánrů: @Model.Count()
+        </div>
+
+        <a asp-action="Create" class="btn btn-primary">
+            + Nový žánr
+        </a>
+    </div>
+
+    <table class="table align-middle table-hover genres-table">
+        <thead class="table-light">
+            <tr>
+                <th>Název</th>
+                <th class="ps-5">Popis</th>
+                <th style="width:160px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="fw-semibold">
+                        @item.Name
+                    </td>
+
+                    <td class="text-muted ps-5">
+                        @item.Description
+                    </td>
+
+                    <!-- ACTION BUTTONS -->
+                    <td class="text-end">
+                        <a asp-action="Edit"
+                           asp-route-id="@item.Id"
+                           class="btn btn-sm btn-outline-primary">
+                            Edit
+                        </a>
+
+                        <button class="btn btn-sm btn-outline-danger"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteConfirmModal"
+                                data-delete-modal
+                                data-controller="Genres"
+                                data-action="Delete"
+                                data-id="@item.Id"
+                                data-text="Opravdu chcete smazat žánr „@item.Name“?">
+                            Smazat
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</section>
+
+<!-- DELETE MODAL -->
+@await Html.PartialAsync("_DeleteConfirmModal")
+
+@section Scripts {
+    <script src="~/js/delete-confirm-modal.js"></script>
+}

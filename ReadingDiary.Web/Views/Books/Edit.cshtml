@@ -1,0 +1,118 @@
+﻿@model ReadingDiary.Web.Models.ViewModels.BookViewModel
+
+@{
+    ViewData["Title"] = "Upravit knihu";
+    ViewData["PageTitle"] = "Upravit knihu";
+    ViewData["PageDescription"] = "Úprava detailů knihy v katalogu.";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-12 col-lg-8">
+
+        <!-- PAGE HEADER -->
+        @await Html.PartialAsync("_PageHeaderPartial")
+
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="CoverImagePath" />
+
+            <div class="mb-3">
+                <label asp-for="Title" class="form-label"></label>
+                <input asp-for="Title" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Isbn" class="form-label"></label>
+                <input asp-for="Isbn" class="form-control" />
+                <span asp-validation-for="Isbn" class="text-danger"></span>
+            </div>
+
+
+            <div class="mb-3">
+                <label asp-for="Author" class="form-label"></label>
+                <input asp-for="Author" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Year" class="form-label"></label>
+                <input asp-for="Year" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Review" class="form-label"></label>
+                <textarea asp-for="Review" class="form-control" rows="3"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Aktuální obrázek</label>
+
+                @if (!string.IsNullOrEmpty(Model.CoverImagePath))
+                {
+                    <img src="/BookCovers/@Model.CoverImagePath"
+                         width="120"
+                         class="d-block mb-2 rounded" />
+                }
+                else
+                {
+                    <p class="text-muted">Žádný obrázek nenahrán.</p>
+                }
+
+                <label asp-for="CoverImageFile" class="form-label mt-2"></label>
+                <input asp-for="CoverImageFile" type="file" class="form-control" accept="image/*" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="SelectedGenreIds" class="form-label"></label>
+                <select asp-for="SelectedGenreIds" asp-items="Model.AvailableGenres" class="form-select" multiple></select>
+                <small class="text-muted">Podrž Ctrl pro výběr více žánrů</small>
+            </div>
+
+            <!-- ACTIONS BUTTONS-->
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-primary">
+                    Uložit změny
+                </button>
+
+                <a asp-action="Index"
+                   class="btn btn-outline-secondary">
+                    Zpět na seznam
+                </a>
+            </div>
+
+        </form>
+
+        <!-- METADATA -->
+        @if (Model.CreatedAt != null || Model.UpdatedAt != null)
+        {
+            <hr />
+
+            <div class="small text-muted mb-3">
+                @if (Model.CreatedAtFormatted != null)
+                {
+                    <div><strong>Vytvořeno:</strong> @Model.CreatedAtFormatted</div>
+                }
+
+                @if (Model.UpdatedAtFormatted != null)
+                {
+                    <div><strong>Poslední úprava:</strong> @Model.UpdatedAtFormatted</div>
+                }
+
+            </div>
+        }
+
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

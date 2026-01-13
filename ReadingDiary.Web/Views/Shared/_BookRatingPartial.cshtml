@@ -1,0 +1,42 @@
+﻿@model ReadingDiary.Web.Models.ViewModels.RatingViewModel
+
+@{
+    var filledStars = (int)Math.Floor(Model.AverageRating);
+}
+
+<div class="rating d-flex flex-column align-items-start mb-3">
+
+    <!-- STARS -->
+    <div class="d-flex align-items-center mb-1 @(Model.IsReadOnly ? "pe-none" : "")">
+        @for (int i = 1; i <= 5; i++)
+        {
+            if (Model.IsReadOnly)
+            {
+                <span class="star-display">
+                    @(i <= filledStars ? "★" : "☆")
+                </span>
+            }
+            else
+            {
+                <form asp-controller="Rating" asp-action="Rate" method="post" class="m-0 p-0">
+
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden" name="bookId" value="@Model.BookId" />
+                    <input type="hidden" name="value" value="@i" />
+
+                    <button type="submit" class="star-button">
+                        @(i <= filledStars ? "★" : "☆")
+                    </button>
+                </form>
+            }
+        }
+    </div>
+
+
+    <!-- TEXT -->
+    <small class="text-muted">
+        (@($"{Model.AverageRating:F1}") / 5 — hodnoceno @Model.RatingsCount×)
+    </small>
+
+</div>

@@ -1,0 +1,19 @@
+﻿
+@{
+    var title = ViewData["PageTitle"] as string;
+    var description = ViewData["PageDescription"] as string;
+}
+
+@if (!string.IsNullOrEmpty(title))
+{
+    <div class="mb-5 mt-5">
+        <h1 class="page-title mb-1">@title</h1>
+
+        @if (!string.IsNullOrEmpty(description))
+        {
+            <p class="text-muted mb-0">
+                @description
+            </p>
+        }
+    </div>
+}

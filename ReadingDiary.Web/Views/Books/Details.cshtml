@@ -1,0 +1,157 @@
+﻿@using ReadingDiary.Web.Models.ViewModels
+@model ReadingDiary.Web.Models.ViewModels.BookDetailViewModel
+
+@{
+    ViewData["Title"] = Model.Title;
+    ViewData["PageTitle"] = Model.Title;
+    ViewData["PageDescription"] = $"{Model.Author} - {Model.Year}";
+}
+
+<!-- PAGE HEADER -->
+@await Html.PartialAsync("_PageHeaderPartial")
+
+
+<div class="row g-4">
+
+    <!-- LEFT COLUMN -->
+    <div class="col-12 col-md-4">
+
+        <!-- CARD -->
+        <div class="card shadow-sm">
+
+            <div style="height:420px; background:#fff; border-bottom:1px solid #f0f0f0;">
+
+                @if (!string.IsNullOrEmpty(Model.CoverImagePath))
+                {
+                    <img src="/BookCovers/@Model.CoverImagePath"
+                         class="card-img-top"
+                         style="height:100%; width:100%; object-fit:contain; padding:16px;"
+                         alt="@Model.Title" />
+                }
+                else
+                {
+                    <div style="height:100%; background:#f7f7f7; border:1px dashed #ccc;"></div>
+                }
+
+            </div>
+
+            <!-- CARD BODY -->
+            <div class="card-body">
+
+                <!-- GENRES -->
+                <div class="mb-3  d-flex justify-content-center flex-wrap gap-1">
+                    @if (Model.Genres?.Any() == true)
+                    {
+                        @foreach (var genre in Model.Genres)
+                        {
+                            <span class="badge bg-secondary me-1 mb-1">
+                                @genre
+                            </span>
+                        }
+                    }
+                    else
+                    {
+                        <span class="text-muted">Bez žánru</span>
+                    }
+                </div>
+
+                <!-- RATING -->
+                <div class="d-flex justify-content-center">
+                    @await Html.PartialAsync("_BookRatingPartial", new RatingViewModel
+                    {
+                        BookId = Model.Id,
+                                        AverageRating = Model.AverageRating,
+                                        RatingsCount = Model.RatingsCount,
+                                        UserRating = null
+                                        })
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <!-- RIGHT COLUMN -->
+    <div class="col-12 col-md-8">
+
+        <div class="mb-3 text-muted">
+            <strong>@Model.Author</strong> • @Model.Year
+        </div>
+
+        <!-- METADATA -->
+        @if (Model.CreatedAtFormatted != null || Model.UpdatedAtFormatted != null)
+        {
+            <small class="text-muted">
+                @if (Model.CreatedAtFormatted != null)
+                {
+                    <span>Vytvořeno: @Model.CreatedAtFormatted</span>
+                }
+
+                @if (Model.UpdatedAtFormatted != null)
+                {
+                    <span class="ms-2">
+                        •  Upraveno: @Model.UpdatedAtFormatted
+                    </span>
+                }
+                else
+                {
+                    <span class="ms-2">
+                        •  Neupraveno
+                    </span>
+                }
+            </small>
+        }
+
+
+        <!-- DESCRIPTION -->
+        @if (!string.IsNullOrWhiteSpace(Model.Description))
+        {
+            <div class="mt-3 mb-4">
+                <h5>Popis</h5>
+                <p>@Model.Description</p>
+            </div>
+        }
+
+        <!-- REVIEW -->
+        @if (!string.IsNullOrWhiteSpace(Model.Review))
+        {
+            <div class="mb-4">
+                <h5>Recenze</h5>
+                <p>@Model.Review</p>
+            </div>
+        }
+
+        <!-- ACTIONS -->
+        <div class="d-flex gap-2 mt-4">
+
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-action="Edit"
+                   asp-route-id="@Model.Id"
+                   class="btn btn-outline-primary">
+                    Upravit knihu
+                </a>
+            }
+
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="btn btn-outline-secondary">
+                Zpět na katalog
+            </a>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- DIARY -->
+@await Html.PartialAsync("_DiarySectionPartial", Model)
+
+<!-- DELETE MODAL -->
+@await Html.PartialAsync("_DeleteConfirmModal")
+
+@section Scripts {
+    <script src="~/js/delete-confirm-modal.js"></script>
+}

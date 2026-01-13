@@ -1,0 +1,89 @@
+﻿@model ReadingDiary.Web.Models.ViewModels.BookViewModel
+
+@{
+    ViewData["Title"] = "Vytvořit novou knihu";
+    ViewData["PageTitle"] = "Vytvořit novou knihu";
+    ViewData["PageDescription"] = "Přidání nové knihy do katalogu.";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-12 col-lg-8  ">
+
+        <!-- PAGE HEADER -->
+        @await Html.PartialAsync("_PageHeaderPartial")
+
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="Title" class="form-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Isbn" class="form-label"></label>
+                <input asp-for="Isbn" class="form-control" />
+                <span asp-validation-for="Isbn" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Author" class="form-label"></label>
+                <input asp-for="Author" class="form-control" />
+                <span asp-validation-for="Author" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Year" class="form-label"></label>
+                <input asp-for="Year" class="form-control" />
+                <span asp-validation-for="Year" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Review" class="form-label"></label>
+                <textarea asp-for="Review" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Review" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="CoverImageFile" class="form-label"></label>
+                <input asp-for="CoverImageFile" type="file" accept="image/*" class="form-control" />
+                <span asp-validation-for="CoverImageFile" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="SelectedGenreIds" class="form-label"></label>
+                <select asp-for="SelectedGenreIds" asp-items="Model.AvailableGenres" class="form-select" multiple></select>
+                <small class="text-muted">Podrž Ctrl pro výběr více žánrů</small>
+                <span asp-validation-for="SelectedGenreIds" class="text-danger"></span>
+            </div>
+
+            <!-- ACTIONS BUTTONS-->
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit"
+                        class="btn btn-primary">
+                    Uložit
+                </button>
+
+                <a asp-action="Index"
+                   class="btn btn-outline-secondary">
+                    Zpět na seznam
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

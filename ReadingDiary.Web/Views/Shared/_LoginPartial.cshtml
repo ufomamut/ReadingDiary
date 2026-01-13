@@ -1,0 +1,24 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using ReadingDiary.Infrastructure.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    var user = await UserManager.GetUserAsync(User);
+
+    <div style="display:flex; align-items:center; gap:10px;">
+        <span>@user?.DisplayName</span>
+
+        <form asp-controller="Account" asp-action="logout" asp-controler method="get">
+            <button type="submit" class="btn btn-sm btn-outline-danger">Odhlásit</button>
+        </form>
+    </div>
+}
+else
+{
+    <div style="display:flex; align-items:center; gap:10px;">
+        <a asp-controller="Account" asp-action="login" class="btn btn-sm btn-outline-primary">Přihlásit</a>
+        <a asp-controller="Account" asp-action="register" class="btn btn-sm btn-outline-success">Registrovat</a>
+    </div>
+}
